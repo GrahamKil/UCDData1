@@ -290,3 +290,175 @@ print(number_of_missing_fin)
 > >> <script.py> output:
 > >> 1574
 
+
+
+
+
+
+
+
+## ENRICHING A DATASET
+
+# Merge the toy_story and taglines tables with a left join
+toystory_tag = toy_story.merge(taglines, on='id', how='left')
+
+# Print the rows and shape of toystory_tag
+print(toystory_tag)
+print(toystory_tag.shape)
+> >> < script.py > output:       id        title  popularity release_date                   tagline
+0  10193  Toy Story 3   59.995418   2010-06-16  No toy gets left behind.
+1    863  Toy Story 2   73.575118   1999-10-30        The toys are back!
+2    862    Toy Story   73.640445   1995-10-30                       NaN
+(3, 5)
+
+
+
+# Merge the toy_story and taglines tables with a inner join
+toystory_tag = toy_story.merge(taglines, on='id', how='inner')
+
+# Print the rows and shape of toystory_tag
+print(toystory_tag)
+print(toystory_tag.shape)
+> >> < script.py > output:        id        title  popularity release_date                   tagline
+    0  10193  Toy Story 3   59.995418   2010-06-16  No toy gets left behind.
+    1    863  Toy Story 2   73.575118   1999-10-30        The toys are back!
+    (2, 5)
+
+
+
+
+
+
+
+
+
+
+### RIGHT JOIN TO FIND UNIQUE MOVIES
+
+# Merge action_movies to scifi_movies with right join
+action_scifi = action_movies.merge(scifi_movies, on='movie_id', how='right')
+
+
+# Merge action_movies to scifi_movies with right join
+action_scifi = action_movies.merge(scifi_movies, on='movie_id', how='right',
+                                   suffixes=('_act', '_sci'))
+
+# Print the first few rows of action_scifi to see the structure
+print(action_scifi.head())
+> >> < script.py > output:  movie_id genre_act        genre_sci
+    0        11    Action  Science Fiction
+    1        18    Action  Science Fiction
+    2        95    Action  Science Fiction
+    3       106    Action  Science Fiction
+    4       154    Action  Science Fiction
+
+
+# Merge action_movies to the scifi_movies with right join
+action_scifi = action_movies.merge(scifi_movies, on='movie_id', how='right',
+                                   suffixes=('_act','_sci'))
+
+# From action_scifi, select only the rows where the genre_act column is null
+scifi_only = action_scifi[action_scifi['genre_act'].isnull()]
+
+
+
+# Merge action_movies to the scifi_movies with right join
+action_scifi = action_movies.merge(scifi_movies, on='movie_id', how='right',
+                                   suffixes=('_act','_sci'))
+
+# From action_scifi, select only the rows where the genre_act column is null
+scifi_only = action_scifi[action_scifi['genre_act'].isnull()]
+
+# Merge the movies and scifi_only tables with an inner join
+movies_and_scifi_only = movies.merge(scifi_only, how='inner',
+        left_on='id', right_on='movie_id')
+
+# Print the first few rows and shape of movies_and_scifi_only
+print(movies_and_scifi_only.head())
+print(movies_and_scifi_only.shape)
+> >> < script.py > output:       id                         title  popularity release_date  movie_id genre_act        genre_sci
+    0  18841  The Lost Skeleton of Cadavra    1.680525   2001-09-12     18841       NaN  Science Fiction
+    1  26672     The Thief and the Cobbler    2.439184   1993-09-23     26672       NaN  Science Fiction
+    2  15301      Twilight Zone: The Movie   12.902975   1983-06-24     15301       NaN  Science Fiction
+    3   8452                   The 6th Day   18.447479   2000-11-17      8452       NaN  Science Fiction
+    4   1649    Bill & Ted's Bogus Journey   11.349664   1991-07-19      1649       NaN  Science Fiction
+    (258, 7)
+
+
+
+
+
+
+### POPULAR GENRES WITH RIGHT JOIN
+# Use right join to merge the movie_to_genres and pop_movies tables
+genres_movies = movie_to_genres.merge(pop_movies, how='right',
+                                      left_on='movie_id', right_on='id')
+
+# Count the number of genres
+genre_count = genres_movies.groupby('genre').agg({'id':'count'})
+
+# Plot a bar chart of the genre_count
+genre_count.plot(kind='bar')
+plt.show()
+
+
+
+# Merge iron_1_actors to iron_2_actors on id with outer join using suffixes
+iron_1_and_2 = iron_1_actors.merge(iron_2_actors,
+                                     on='id',
+                                     how='outer',
+                                     suffixes=('_1','_2'))
+
+# Create an index that returns true if name_1 or name_2 are null
+m = ((iron_1_and_2['name_1'].isnull()) |
+     (iron_1_and_2['name_2'].isnull()))
+
+# Print the first few rows of iron_1_and_2
+print(iron_1_and_2[m].head())
+> >> < script.py > output:  character_1      id           name_1 character_2 name_2
+    0                       Yinsen   17857       Shaun Toub         NaN    NaN
+    2  Obadiah Stane / Iron Monger    1229     Jeff Bridges         NaN    NaN
+    3                  War Machine   18288  Terrence Howard         NaN    NaN
+    5                         Raza   57452      Faran Tahir         NaN    NaN
+    8                   Abu Bakaar  173810    Sayed Badreya         NaN    NaN
+
+
+
+
+
+
+
+###  SELF JOIN - MERGING A TABLE TO ITSELF
+
+# Merge the crews table to itself
+crews_self_merged = crews.merge(crews,on='id', how='inner', suffixes=('_dir', '_crew'))
+
+
+# Merge the crews table to itself
+crews_self_merged = crews.merge(crews, on='id', how='inner',
+                                suffixes=('_dir','_crew'))
+
+# Create a Boolean index to select the appropriate rows
+boolean_filter = ((crews_self_merged['job_dir'] == 'Director') &
+                  (crews_self_merged['job_crew'] != 'Director'))
+direct_crews = crews_self_merged[boolean_filter]
+
+
+# Merge the crews table to itself
+crews_self_merged = crews.merge(crews, on='id', how='inner',
+                                suffixes=('_dir','_crew'))
+
+# Create a boolean index to select the appropriate rows
+boolean_filter = ((crews_self_merged['job_dir'] == 'Director') &
+                  (crews_self_merged['job_crew'] != 'Director'))
+direct_crews = crews_self_merged[boolean_filter]
+
+# Print the first few rows of direct_crews
+print(direct_crews.head())
+> >> < script.py > output:  id   job_dir       name_dir        job_crew          name_crew
+    156  19995  Director  James Cameron          Editor  Stephen E. Rivkin
+    157  19995  Director  James Cameron  Sound Designer  Christopher Boyes
+    158  19995  Director  James Cameron         Casting          Mali Finn
+    160  19995  Director  James Cameron          Writer      James Cameron
+    161  19995  Director  James Cameron    Set Designer    Richard F. Mays
+
