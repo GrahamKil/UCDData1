@@ -343,12 +343,12 @@ sales is available and pandas is loaded as pd.
 #1
 # Print the maximum of the date column
 print(sales['date'].max())
-
+<script.py> output:
 > 2012-10-26 00:00:00
 
 # Print the minimum of the date column
 print(sales['date'].min())
-
+<script.py> output:
 > 2010-02-05 00:00:00
 
 
@@ -392,7 +392,7 @@ def iqr(column):
 
 # Update to print IQR of temperature_c, fuel_price_usd_per_l, & unemployment
 print(sales[["temperature_c", 'fuel_price_usd_per_l', 'unemployment']].agg(iqr))
-
+<script.py> output:
 > temperature_c           16.583
   fuel_price_usd_per_l     0.073
   unemployment             0.565
@@ -406,7 +406,7 @@ def iqr(column):
 
 # Update to print IQR and median of temperature_c, fuel_price_usd_per_l, & unemployment
 print(sales[["temperature_c", "fuel_price_usd_per_l", "unemployment"]].agg([iqr, np.median]))
-
+<script.py> output:
 >         temperature_c  fuel_price_usd_per_l  unemployment
 iqr            16.583                 0.073         0.565
 median         16.967                 0.743         8.099
@@ -551,6 +551,7 @@ print(sales_propn_by_type)
 # Group by type and is_holiday; calc total weekly sales
 sales_by_type_is_holiday = sales.groupby(["type",'is_holiday'])["weekly_sales"].sum()
 print(sales_by_type_is_holiday)
+<script.py> output:
 > type  is_holiday
   A     False         2.337e+08
         True          2.360e+04
@@ -598,6 +599,7 @@ mean_sales_by_type = sales.pivot_table(values='weekly_sales', index='type')
 
 # Print mean_sales_by_type
 print(mean_sales_by_type)
+<script.py> output:
 >       weekly_sales
   type
   A        23674.667
@@ -608,6 +610,7 @@ mean_med_sales_by_type = sales.pivot_table(values='weekly_sales', index= 'type',
 
 # Print mean_med_sales_by_type
 print(mean_med_sales_by_type)
+<script.py> output:
 >              mean       median
        weekly_sales weekly_sales
   type
@@ -619,6 +622,7 @@ mean_sales_by_type_holiday = sales.pivot_table(values='weekly_sales', index= 'ty
 
 # Print mean_sales_by_type_holiday
 print(mean_sales_by_type_holiday)
+<script.py> output:
 > is_holiday      False    True
   type
   A           23768.584  590.045
@@ -754,7 +758,7 @@ temperatures_srt = temperatures_ind.sort_index()
 
 # Subset rows from Pakistan to Russia
 print(temperatures_srt.loc['Pakistan':'Russia'])
-
+<script.py> output:
                                date  avg_temp_c
 country  city
 Pakistan Faisalabad       2000-01-01      12.792
@@ -772,7 +776,7 @@ Russia   Saint Petersburg 2013-05-01      12.355
 
 # Try to subset rows from Lahore to Moscow (This will return nonsense.)
 print(temperatures_srt.loc['Lahore':'Moscow'])
-
+<script.py> output:
                          date  avg_temp_c
 country city
 Mexico  Mexico     2000-01-01      12.694
@@ -789,7 +793,7 @@ Morocco Casablanca 2013-05-01      19.217
 
 # Subset rows from Pakistan, Lahore to Russia, Moscow
 print(temperatures_srt.loc[('Pakistan','Lahore'):('Russia', 'Moscow')])
-
+<script.py> output:
                     date  avg_temp_c
 country  city
 Pakistan Lahore 2000-01-01      12.792
@@ -904,7 +908,7 @@ temp_by_country_city_vs_year = temperatures.pivot_table('avg_temp_c', index=['co
 
 # See the result
 print(temp_by_country_city_vs_year)
-
+<script.py> output:
 year                              2000    2001    2002    2003    2004  ...    2009    2010    2011    2012    2013
 country       city                                                      ...
 Afghanistan   Kabul             15.823  15.848  15.715  15.133  16.128  ...  15.093  15.676  15.812  14.510  16.206
@@ -940,7 +944,7 @@ temp_by_country_city_vs_year.loc[('Egypt','Cairo'):('India','Delhi')]
 
 # Subset in both directions at once
 temp_by_country_city_vs_year.loc[('Egypt','Cairo'):('India','Delhi'),'2005':'2010']
-
+<script.py> output:
 year                    2005    2006    2007    2008    2009    2010
 country  city
 Egypt    Cairo        22.006  22.050  22.361  22.644  22.625  23.718
@@ -970,6 +974,7 @@ mean_temp_by_year = temp_by_country_city_vs_year.mean()
 
 # Filter for the year that had the highest mean temp
 print(mean_temp_by_year[mean_temp_by_year==mean_temp_by_year.max()])
+<script.py> output:
 > year
   2013    20.312
   dtype: float64
@@ -979,6 +984,7 @@ mean_temp_by_city = temp_by_country_city_vs_year.mean(axis="columns")
 
 # Filter for the city that had the lowest mean temp
 print(mean_temp_by_city[mean_temp_by_city==mean_temp_by_city.min()])
+<script.py> output:
 > country  city
   China    Harbin    4.877
   dtype: float64
